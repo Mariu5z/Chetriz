@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using System.Diagnostics;
+//using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
 //using static System.Net.Mime.MediaTypeNames;
@@ -22,6 +22,8 @@ public class Testing : MonoBehaviour
     public GameObject levelText;
     public GameObject counterText;
     public GameObject modeText;
+    public GameObject recordTimeText;
+    public GameObject timeText;
 
     //tworzenie obiektów stworzonych klas pomocnicznych
     public Grid grid;//zawiera wartoœci tabeli wskazuj¹ce jak u³o¿one s¹ pionki, równie¿ rozmiary tabeli                     
@@ -40,17 +42,21 @@ public class Testing : MonoBehaviour
     private bool zamien = false;//czy jesteœmy w trybie zamien
     private bool dodaj = true;
 
-    private int count = 0;//licznik klikniec
+    public int count = 0;//licznik klikniec
     private bool[] shapesFound = new bool[12];//tabela trafieñ kszta³tów dla gracza
     private bool[] EnshapesFound = new bool[12];//tabela trafieñ kszta³tów dla przeciwnika
 
-    private int Level;//zmienna mówi który level
+    public int Level;//zmienna mówi który level
     public int Difficulty;//ilosc pionkow gracza, 1-³atwy, 2-œredni, 3-trudny
+    public float timer;
+    public float wholeSeconds; 
 
     void Start()
     {
         Level = 1;//ustawienia pocz¹tkowe gry
         Difficulty = 2;
+        timer = 0f;
+        wholeSeconds = 0f;
 
         Levels.DrawShapesOrder();//losuj kolejnoœæ kszta³tów w grze
         thisLevel = new Levels(Difficulty, Level);
@@ -63,6 +69,7 @@ public class Testing : MonoBehaviour
 
     private void Update()
     {
+
         if (Input.GetMouseButtonDown(0) && HowToPlay.boardLockFlag == false)                                                    //GDY LPM  jest nacisniety
         {
             Vector3 mousePosition = Input.mousePosition;                      //pobierz pozycje myszy do lokalnej zmiennej
@@ -160,6 +167,9 @@ public class Testing : MonoBehaviour
             {
                 Level = 1;
                 count = -1;
+                timer = 0f;
+                wholeSeconds = 0f;
+                updateText(timeText, "Czas: " + wholeSeconds.ToString());
                 changeScoreText(Level);
                 Levels.DrawShapesOrder();
             }
@@ -185,6 +195,14 @@ public class Testing : MonoBehaviour
                 zatwierdz = true;
             }
         }
+
+        // Update the timer
+        timer += Time.deltaTime;
+        if (timer >= wholeSeconds + 1f && (dodaj || zamien))
+        {
+            wholeSeconds = wholeSeconds + 1f;
+            updateText(timeText, "Czas: " + wholeSeconds.ToString());
+        }
     }
 
     private void SetLeveL()
@@ -195,6 +213,7 @@ public class Testing : MonoBehaviour
         ShapePosition.GetCurrentShapes(ShapesObject, Levels.ShapesOrder, Level);
 
         changeScoreText(Level);
+        timer = wholeSeconds;
         TrybDodaj();
 
         Array.Fill(shapesFound, false);//czyszczenie tablicy
@@ -222,18 +241,19 @@ public class Testing : MonoBehaviour
 
         ShapePosition.SetShapes(ShapesObject, Levels.ShapesOrder);
 
-        ChangeLevelWriting();
+        updateText(levelText, "Poziom: " + Level.ToString());
         
         thisLevel = new Levels(Difficulty, Level);
         SetLeveL();
 
-        ChangeCount();
+        count++;
+        updateText(counterText, "Licznik: " + count.ToString());
     }
 
     private void LoadNextLeveL()
     {
         Level++;
-        ChangeLevelWriting();
+        updateText(levelText, "Poziom: " + Level.ToString());
 
         LvlWonText.SetActive(false);
         LvlLostText.SetActive(false);
@@ -251,7 +271,7 @@ public class Testing : MonoBehaviour
     {
         if (shapesFound[thisLevel.ShapeNumber - 1] && !EnshapesFound[thisLevel.ShapeNumber - 1])
         {
-            Records.updateRecords(Level, count);//sprawdz i ewentualnie nadpisz rekord
+            Records.updateRecords(Level, count, (int)wholeSeconds);//sprawdz i ewentualnie nadpisz rekord
             if (Level == 12)
             {
                 VictoryObject.SetActive(true);
@@ -294,8 +314,6 @@ public class Testing : MonoBehaviour
 
     private void zmianatrybu()                                           //obs³uga przycsku zmiany trybu gry po nacisnieciu
     {
-        Text textComponent = modeText.GetComponent<Text>();
-
         circle.HideSelected(CirclesObject, true);                                           //schowaj zaznaczenia
         circle.HideSelected(CirclesObject, false);
 
@@ -303,7 +321,7 @@ public class Testing : MonoBehaviour
         {
             zamien = true;
             dodaj = false;
-            textComponent.text = "Tryb: Zamienianie";                         
+            updateText(modeText, "Tryb: Zamienianie");                      
             zaznaczone = false;
             first8 = true;
         }
@@ -311,7 +329,7 @@ public class Testing : MonoBehaviour
         {
            zamien = false;                                         
            dodaj = true;
-           textComponent.text = "Tryb: Dodawanie";
+           updateText(modeText, "Tryb: Dodawanie");
            zaznaczone32 = false;
            zaznaczone56 = false;
         }
@@ -319,40 +337,41 @@ public class Testing : MonoBehaviour
 
     private void TrybDodaj()
     {
-        Text textComponent = modeText.GetComponent<Text>();
+        updateText(modeText, "Tryb: Dodawanie");
         zamien = false;
         dodaj = true;
-        textComponent.text = "Tryb: Dodawanie";
         first8 = true;
-    }
-
-    private void ChangeCount()
-    {
-        count++;
-        Text textComponent = counterText.GetComponent<Text>();
-        textComponent.text = "Licznik: " + count.ToString();
-    }
-
-    private void ChangeLevelWriting()
-    {
-        Text textComponent = levelText.GetComponent<Text>();
-        textComponent.text = "Poziom: " + Level.ToString();
     }
 
     private void changeScoreText(int level)
     {
-        int[] levelScores = Records.getBestResult(level);
-        int best = levelScores[0];
-
-        Text textComponent = recordText.GetComponent<Text>();
-        if (best >= 1000)
+        int[] bestClicks = Records.getBestResults(level, "clicks");
+        int best = bestClicks[0];
+        if (best >= Records.clicksLimit)
         {
-            textComponent.text = "Rekord: -";
+            updateText(recordText, "Rekord: -");
         }
         else
         {
-            textComponent.text = "Rekord: " + best.ToString();
+            updateText(recordText, "Rekord: " + best.ToString());
         }
+
+        bestClicks = Records.getBestResults(level, "times");
+        best = bestClicks[0];
+        if (best >= Records.timesLimit)
+        {
+            updateText(recordTimeText, "Rekord: -");
+        }
+        else
+        {
+            updateText(recordTimeText, "Rekord: " + best.ToString());
+        }
+    }
+
+    private void updateText(GameObject gameObject, string newText)
+    {
+        Text textComponent = gameObject.GetComponent<Text>();
+        textComponent.text = newText;
     }
 
     private IEnumerator DelayedPawnMove1()
@@ -380,7 +399,8 @@ public class Testing : MonoBehaviour
             {
                 shapesFound = Shapes.shapes(grid.gridArray55);
                 EnshapesFound = Shapes.EnShapes(grid.gridArray55);
-                ChangeCount();
+                count++;
+                updateText(counterText, "Licznik: " + count.ToString());
                 CheckResults();
             } 
         }
@@ -441,14 +461,13 @@ public class Testing : MonoBehaviour
             {
                 shapesFound = Shapes.shapes(grid.gridArray55);
                 EnshapesFound = Shapes.EnShapes(grid.gridArray55);
-                ChangeCount();
+                count++;
+                updateText(counterText, "Licznik: " + count.ToString());
                 CheckResults();
             }
         }
 
         yield break;
     }
-
-
 
 }

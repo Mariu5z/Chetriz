@@ -20,6 +20,7 @@ public class Buttons : MonoBehaviour
     public GameObject ShapesObject;
     public GameObject HowToPlayObject;
     public GameObject resultBar;
+    public GameObject resultTimeBar;
     public GameObject nextLevelButton;
     //Flags indicating event when the buttons are clicked are very useful
     public static bool RestartFlag = false;                        
@@ -30,6 +31,7 @@ public class Buttons : MonoBehaviour
     public static bool RestartTutorialFlag = true;
     //another public objects to assing in unity inspector
     public GameObject RecordsClicks;
+    public GameObject RecordsTimes;
     public TMP_Dropdown myDropdown; 
 
 
@@ -70,6 +72,7 @@ public class Buttons : MonoBehaviour
     {
         HowToPlayObject.SetActive(true);
         resultBar.SetActive(false);
+        resultTimeBar.SetActive(false);
         nextLevelButton.SetActive(false);
         StartGame();
     }
@@ -105,6 +108,7 @@ public class Buttons : MonoBehaviour
         HowToPlay.tutorialFlag = false;
         HowToPlay.step = 1;
         resultBar.SetActive(true);
+        resultTimeBar.SetActive(true);
         nextLevelButton.SetActive(true);
     }
 
@@ -147,11 +151,12 @@ public class Buttons : MonoBehaviour
 
     public void DisplayRecords(int index)
     {
-        int[] levelScores = Records.getBestResult(index+1);
+        //clicks update display -----------------------------------------
+        int[] levelScores = Records.getBestResults(index+1, "clicks");
         string recordsAll = "";
         for (int i = 0; i < levelScores.Length; i++)
         {
-            if (levelScores[i] == 1000)
+            if (levelScores[i] == Records.clicksLimit)
             {
                 recordsAll += "-" + "\n";
             }
@@ -161,6 +166,23 @@ public class Buttons : MonoBehaviour
             }
         }
         Text textComponent = RecordsClicks.GetComponent<Text>();
+        textComponent.text = recordsAll;
+
+        //times update display -----------------------------------------
+        levelScores = Records.getBestResults(index + 1, "times");
+        recordsAll = "";
+        for (int i = 0; i < levelScores.Length; i++)
+        {
+            if (levelScores[i] == Records.timesLimit)
+            {
+                recordsAll += "-" + "\n";
+            }
+            else
+            {
+                recordsAll += levelScores[i].ToString() + "\n";
+            }
+        }
+        textComponent = RecordsTimes.GetComponent<Text>();
         textComponent.text = recordsAll;
     }
 }

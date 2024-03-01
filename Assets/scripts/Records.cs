@@ -19,14 +19,17 @@ public class LevelData
 {
     public int level;
     public List<int> clicks;
+    public List<int> times;
 }
 
 public static class Records
 {
-    static string filePath = Application.persistentDataPath + "/RecordsData.json";
+    static public string filePath = Application.persistentDataPath + "/RecordsData.json";
     static public RecordsData recordsData;
     static int numberOfLevels = 12;
     static int numberOfBestScores = 5;
+    static public int clicksLimit = 1000;
+    static public int timesLimit = 10000;
 
     static public void loadJSON()
     {
@@ -58,13 +61,15 @@ public static class Records
             LevelData levelData = new LevelData
             {
                 level = i,
-                clicks = new List<int>()
+                clicks = new List<int>(),
+                times = new List<int>()
             };
 
             // Add default score of 1000 for each level
             for (int j = 0; j < numberOfBestScores; j++)
             {
-                levelData.clicks.Add(1000);
+                levelData.clicks.Add(clicksLimit);
+                levelData.times.Add(timesLimit);
             }
 
             recordsData.levels.Add(levelData);
@@ -87,33 +92,54 @@ public static class Records
         //Debug.Log("Game data saved.");
     }
 
-    static public int[] getBestResult(int level)
+    static public int[] getBestResults(int level, string type)
     {
         if (recordsData == null)
         {
             loadJSON();
         }
         LevelData levelData = recordsData.levels.Find(l => l.level == level);
-        return levelData.clicks.ToArray();
+        if (type == "clicks")
+        {
+            return levelData.clicks.ToArray();
+        }
+        else if (type == "times")
+        {
+            return levelData.times.ToArray();
+        }
+        else
+        {
+            Debug.Log("Wrong input");
+            return new int[0];
+        }
     }
 
-    static public void updateRecords(int level, int score) 
+    static public void updateRecords(int level, int Clickscore, int TimeScore) 
     {
-        if (level < 1 || level > numberOfLevels || score <= 0)
-        {
-            Debug.Log("wrong input");
-            return;
-        } 
-        LevelData levelData = recordsData.levels.Find(l => l.level == level);
+        int[] bestResults = getBestResults(level, "clicks");
         for (int i = 0; i < numberOfBestScores; i++)
         {
-            if (score < levelData.clicks[i])
+            if (Clickscore < bestResults[i])
             {
-                int temp = levelData.clicks[i];
-                levelData.clicks[i] = score;
-                score = temp;
+                int temp = bestResults[i];
+                bestResults[i] = Clickscore;
+                Clickscore = temp;
             }
         }
+        recordsData.levels.Find(l => l.level == level).clicks = bestResults.ToList();
+
+        bestResults = getBestResults(level, "times");
+        for (int i = 0; i < numberOfBestScores; i++)
+        {
+            if (TimeScore < bestResults[i])
+            {
+                int temp = bestResults[i];
+                bestResults[i] = TimeScore;
+                TimeScore = temp;
+            }
+        }
+        recordsData.levels.Find(l => l.level == level).times = bestResults.ToList();
+
         SaveGameData();
     }
 

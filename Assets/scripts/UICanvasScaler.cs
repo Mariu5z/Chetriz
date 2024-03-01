@@ -13,6 +13,7 @@ public class UICanvasScaler : MonoBehaviour
     public RectTransform topAnchor;
     public RectTransform bottomAnchor;
     public RectTransform resultBar;
+    public RectTransform resultTimeBar;
     public RectTransform infoBar;
     public Button restart;
     public Button nextLevel;
@@ -23,6 +24,8 @@ public class UICanvasScaler : MonoBehaviour
     public Text countertxt;
     public Text leveltxt;
     public Text rekordtxt;
+    public Text counterTimetxt;
+    public Text rekordTimetxt;
     public RectTransform HowToPlayLesson;
     public Canvas TutorialCanvas;
 
@@ -36,13 +39,19 @@ public class UICanvasScaler : MonoBehaviour
         //setting bottom anchor area
         rt = bottomAnchor.GetComponent<RectTransform>();
         rt.sizeDelta = new Vector2(rt.sizeDelta.x, UIHeight);
-        //settin result bar area
-        rt = resultBar.GetComponent<RectTransform>();
-        rt.sizeDelta = new Vector2(rt.sizeDelta.x, UIHeight/4);
-        resultBar.anchoredPosition = new Vector2(0, -UIHeight / 2);
         //settin info bar area
         rt = infoBar.GetComponent<RectTransform>();
-        rt.sizeDelta = new Vector2(rt.sizeDelta.x, UIHeight / 2);
+        rt.sizeDelta = new Vector2(rt.sizeDelta.x, (5 * UIHeight) / 12);
+        //settin result time bar area
+        rt = resultTimeBar.GetComponent<RectTransform>();
+        rt.sizeDelta = new Vector2(rt.sizeDelta.x, UIHeight / 6);
+        resultTimeBar.anchoredPosition = new Vector2(0, -5 * UIHeight / 12);
+        //settin result bar area
+        rt = resultBar.GetComponent<RectTransform>();
+        rt.sizeDelta = new Vector2(rt.sizeDelta.x, UIHeight/6);
+        resultBar.anchoredPosition = new Vector2(0, -5*UIHeight / 12 - UIHeight / 6);
+        
+        
 
         //buttons through all width and height of 1/4
         rt = restart.GetComponent<RectTransform>();
@@ -63,6 +72,10 @@ public class UICanvasScaler : MonoBehaviour
         rt = leveltxt.GetComponent<RectTransform>();
         rt.sizeDelta = new Vector2(UIWidth / 3, rt.sizeDelta.y);
         rt = rekordtxt.GetComponent<RectTransform>();
+        rt.sizeDelta = new Vector2(UIWidth / 3, rt.sizeDelta.y);
+        rt = rekordTimetxt.GetComponent<RectTransform>();
+        rt.sizeDelta = new Vector2(UIWidth / 3, rt.sizeDelta.y);
+        rt = counterTimetxt.GetComponent<RectTransform>();
         rt.sizeDelta = new Vector2(UIWidth / 3, rt.sizeDelta.y);
         //setting all fonts in canvas to the same font, font size depend on screen size
         int newFontSize = (int)(UIWidth * 50 / 1080);
