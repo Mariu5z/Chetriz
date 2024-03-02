@@ -16,6 +16,7 @@ public class HowToPlay : MonoBehaviour
     public Text lessonText;
     public static int step = 1;
 
+
     Dictionary<int, string> lessons = new Dictionary<int, string>
     {
         {1, "Witaj w Samouczku\n" + "Kliknij DALEJ aby zaczπÊ szkolenie"},//ok
@@ -33,29 +34,28 @@ public class HowToPlay : MonoBehaviour
         {13, "Pozycja znacznika okreúla w ktÛrym rzÍdzie pionki bÍdπ odpychane, a jego wartoúÊ na jak daleko" },//dalej
         {14, "Dodaj nowe pionki na plansze, aby lepiej zrozumieÊ algorytm ruchu, zauwaø øe znacznik przesuwa siÍ przeciwnie do wskazÛwek zegara" },//wielorazowy, sandbox
         {15, "MyúlÍ øe jesteú gotowy na grÍ, czy uda ci siÍ wygraÊ 12 poziomÛw? ile bÍdziesz potrzebowa≥ klikniÍÊ? WYJDè z samouczka i sprawdü!" }
-    };
-    HashSet<int> ModeButtonActive = new HashSet<int>  { 3, 14 };
+    };//information text for every step in tutorial
+    HashSet<int> ModeButtonActive = new HashSet<int>  { 3, 14 };//in which steps mode button is active
     HashSet<int> ConfirmButtonActive = new HashSet<int> { 2, 4, 14 };
     HashSet<int> RestartButtonActive = new HashSet<int> { 10 };
     HashSet<int> NextLessonButtonDeactive = new HashSet<int> { 2, 3, 4, 10, 15 };
-    HashSet<int> boardLock = new HashSet<int> { 2, 4, 14 };
-    HashSet<int> moveLock = new HashSet<int> { 14 };
+    HashSet<int> boardLock = new HashSet<int> { 2, 4, 14 };//in which steps board is selectable
+    HashSet<int> moveLock = new HashSet<int> { 14 };//in which steps pawns are movins after confirmation
     public static bool boardLockFlag = false;
     public static bool moveLockFlag = false;
     public static bool taskDoneFlag = false;
     public static bool tutorialFlag = false;
 
-    // Update is called once per frame
     void Update()
     {
-        if (Buttons.NextLessonFlag == true || taskDoneFlag == true)
+        if (Buttons.NextLessonFlag == true || taskDoneFlag == true)//go to the next lesson (next step of tutorial)
         {
             Buttons.NextLessonFlag = false;
             taskDoneFlag = false;
             step++;
             StartLesson();
         }
-        if (Buttons.RestartTutorialFlag == true)//zacznij tutorial
+        if (Buttons.RestartTutorialFlag == true)//start tutorial
         {
             step = 1;
             StartLesson();
@@ -64,7 +64,7 @@ public class HowToPlay : MonoBehaviour
         }
     }
 
-    public void StartLesson()
+    public void StartLesson()//set everything for current step in tutorial
     {
         Text textComponent = progressText.GetComponent<Text>();
         textComponent.text = step.ToString() + " / " + lessons.Count.ToString();

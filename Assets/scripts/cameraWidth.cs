@@ -8,13 +8,12 @@ public class cameraWidth : MonoBehaviour
     float aspectRatio;
     public static Camera mainCamera;
 
-    // Start is called before the first frame update
+    // mainCamera.orthographicSize adjusted so horizontal size is always equal to board widht = 28
     void Start()
     {
         mainCamera = Camera.main;
         float desiredHorizontalSize = 28.0f; // Set your desired horizontal size
         float aspectRatio = mainCamera.aspect;
-
         mainCamera.orthographicSize = desiredHorizontalSize / aspectRatio;
     }
 

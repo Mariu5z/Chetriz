@@ -19,6 +19,10 @@ public class Shapes
     private static bool[] result4 = new bool[2];
     private static int i, j, k;
 
+    //main function seeking shapes and returns which shapes are detected via bool array
+    //given is table representing pawns arragment
+    //this function detects shapes constisted of black and gray pawns
+    //firstly detected are lines, then for every line special function detects shapes
     public static bool[] shapes(int[,] table)
     {
         myTable =GrowTable(table);
@@ -30,15 +34,14 @@ public class Shapes
             length = 0;
             for (j = 2; j < 7; j++)
             {
-                //Debug.Log("i:"+i.ToString() + ", j:" + j.ToString()+ "  -> "+ table[i, j].ToString());
                 if (myTable[i, j] > 22)
                 {
                     length++;
-                }
+                }//if pawn detected
                 else
                 {
                     length = 0;
-                }
+                }//else empty field so there is no line
 
                 if (length >= 2)
                 {
@@ -48,11 +51,11 @@ public class Shapes
                         //Debug.Log("znaleziono 12 dla " + i.ToString() + " " + j.ToString());
                         results[11]= true;
                     }
-                }
+                }//if line has length 2
 
                 if (length >= 3)
                 {
-                    result3 = line3h(i, j - 2, myTable);
+                    result3 = line3h(i, j - 2, myTable);//detect shapes and save into table
                     for (k = 0; k < 8; k++)
                     {
                         if (result3[k])
@@ -62,7 +65,7 @@ public class Shapes
                         }
                     }
 
-                }
+                }//if line has length 3
 
                 if (length >= 4)
                 {
@@ -89,7 +92,8 @@ public class Shapes
             }
         }
 
-        for (j = 2; j < 7; j++)                      //szukanie linii pionowych
+        //seeking vertical lines
+        for (j = 2; j < 7; j++)                
         {
             length = 0;
             for (i = 2; i < 7; i++)
@@ -143,7 +147,7 @@ public class Shapes
         return results;
     }
 
-
+    //identical like shapes() but this function detects shapes constisted of white and gray pawns
     public static bool[] EnShapes(int[,] table)
     {
 
@@ -270,8 +274,8 @@ public class Shapes
 
     }
 
-
-    public static bool line2h(int x, int y, int[,] table)          //wykrywa ksztalt 12 dla poziomych lini 2, gdy to ta pozioma linia jest nizej w ksztalcie
+    //detects shape 12 for horizontal lines, given a
+    public static bool line2h(int x, int y, int[,] table)          
     {
         bool detected = false;
 

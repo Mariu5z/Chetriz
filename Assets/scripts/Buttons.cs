@@ -36,7 +36,7 @@ public class Buttons : MonoBehaviour
 
 
     //turn on start menu
-    //turn off other game modes
+    //turn off game mode, tutorial and records tab
     public void StartMenu()
     {
         EndTutorial();
@@ -51,7 +51,7 @@ public class Buttons : MonoBehaviour
         RestartTutorialFlag = true;
     }
 
-    //turn on solo game mode
+    //turn on game mode
     public void StartGame()
     {
         StartMenuObject.SetActive(false);
@@ -61,6 +61,7 @@ public class Buttons : MonoBehaviour
         TestingObject.SetActive(true);
     }
 
+    //turn on records tab
     public void showRecords()
     {
         StartMenuObject.SetActive(false);
@@ -68,6 +69,7 @@ public class Buttons : MonoBehaviour
         DisplayRecords(myDropdown.value);
     }
 
+    //turn on tutorial (tutotial uses game mode but turn off some funcionality within it)
     public void StartHowToPlay()
     {
         HowToPlayObject.SetActive(true);
@@ -77,7 +79,7 @@ public class Buttons : MonoBehaviour
         StartGame();
     }
 
-    //end game - exit from apllication
+    //exit application
     public void EndGame()
     {
         Application.Quit();                                       
@@ -101,6 +103,7 @@ public class Buttons : MonoBehaviour
         NextLessonFlag = true;
     }
 
+    //when tutorial ends this function is used 
     public void EndTutorial()
     {
         HowToPlay.boardLockFlag = false;
@@ -123,31 +126,11 @@ public class Buttons : MonoBehaviour
         button.interactable = true;
     }
 
-    // Modify the color of button to white if color is "white", in other cases turn button into gray
-    public static void ChangeButtonColor(Button button, string color)
-    {
-        //getting into button component in button object from parameter
-        Button buttonComponent = button.GetComponent<Button>();
-        //getting into colorblock class when you can modify color of button
-        ColorBlock colorBlock = buttonComponent.colors;
-
-        if (color == "white")
-        {
-            colorBlock.normalColor = Color.white;//apply white color
-            buttonComponent.colors = colorBlock;
-        }
-        else
-        {
-            colorBlock.normalColor = new Color(0.5f, 0.5f, 0.5f);//apply gray color
-            buttonComponent.colors = colorBlock;
-        }
-    }
-
     public void CleanRecords()
     {
         Records.cleanRecords();
         DisplayRecords(myDropdown.value);
-    }
+    }//clean all the saved records
 
     public void DisplayRecords(int index)
     {
@@ -184,5 +167,5 @@ public class Buttons : MonoBehaviour
         }
         textComponent = RecordsTimes.GetComponent<Text>();
         textComponent.text = recordsAll;
-    }
+    }//update displaying records using dropdown menu
 }

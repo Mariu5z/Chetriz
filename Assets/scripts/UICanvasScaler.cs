@@ -31,6 +31,7 @@ public class UICanvasScaler : MonoBehaviour
 
     void Start()
     {
+        //UIHEIGHT is number of pixels to use below and upper board in the screen  
         UIHeight = Screen.height * (cameraWidth.mainCamera.orthographicSize - 28f) / (2 * cameraWidth.mainCamera.orthographicSize);
         UIWidth = Screen.width;
         //settin top anchor area

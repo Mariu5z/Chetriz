@@ -6,14 +6,14 @@ using System.IO;
 using UnityEngine;
 using System.Linq;
 
-//--------------------------------baza danych
-//tabele sk³ada siê z poziomów
+//--------------------------------data base for records
+//records data consist of levels
 [System.Serializable]
 public class RecordsData
 {
     public List<LevelData> levels;
 }
-//ka¿dy poziom ma swój numer i zbiór wyników
+//in each level is nuber defining which level it refers and list of best results of clicks and times for that level
 [System.Serializable]
 public class LevelData
 {
@@ -21,16 +21,19 @@ public class LevelData
     public List<int> clicks;
     public List<int> times;
 }
+//-------------------------------------
 
+//class managing records database
 public static class Records
 {
-    static public string filePath = Application.persistentDataPath + "/RecordsData.json";
-    static public RecordsData recordsData;
+    static public string filePath = Application.persistentDataPath + "/RecordsData.json";//file for storing data
+    static public RecordsData recordsData;//variable storing the all data
     static int numberOfLevels = 12;
     static int numberOfBestScores = 5;
     static public int clicksLimit = 1000;
     static public int timesLimit = 10000;
 
+    //loading records into recordsData variable so it will be accesible later
     static public void loadJSON()
     {
         if (File.Exists(filePath))
@@ -48,6 +51,7 @@ public static class Records
         }
     }
 
+    //this creates file with deafult values and assigning recordsData 
     static public void crateAndLoadJSON()
     {
         recordsData = new RecordsData
@@ -81,6 +85,7 @@ public static class Records
         //Debug.Log("file created and loaded");
     }
 
+    //updating json file
     static public void SaveGameData()
     {
         // Serialize the data to JSON
@@ -92,6 +97,7 @@ public static class Records
         //Debug.Log("Game data saved.");
     }
 
+    //returns array of best results of given type for given level
     static public int[] getBestResults(int level, string type)
     {
         if (recordsData == null)
@@ -114,6 +120,7 @@ public static class Records
         }
     }
 
+    //update recordsData, there is one new score for clicks and time for given level, it may jump into recordsData in this function
     static public void updateRecords(int level, int Clickscore, int TimeScore) 
     {
         int[] bestResults = getBestResults(level, "clicks");
@@ -143,6 +150,7 @@ public static class Records
         SaveGameData();
     }
 
+    //delete json and creates new with deafult values
     static public void cleanRecords()
     {
         File.Delete(filePath);

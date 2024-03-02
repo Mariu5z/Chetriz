@@ -3,28 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //this class returns values defining level and its start moment
-//level is definied by pawns arrangement, current shape, map movement pattern and position of map movement position
+//level is definied by pawns arrangement, current shape, map movement pattern and position of map movement marker
 public class Levels
 {
     public static int[] ShapesOrder = new int[12];
-    //Random rng = new Random(); // Create a random number generator
     static System.Random rng = new System.Random(); // Create a random number generator
     public int[,] PawnsTable = new int[5, 5];
     public int[,] ForceArray = new int[4, 5];
     public int ShapeNumber;
     public int MarkerStartPosition;
 
-    //constructor preparing board for new level
-    //draw arrangments of pawns in the start of level (based on difficulty and level)
-    //chose force patern of map movement
-    //chose drawn shape 
-    //draw start position of map marker movement
+    //constructor preparing game for new level
     public Levels(int difficulty, int level)
     {
-        PawnsTable = DrawPawns(difficulty, level);
-        ForceArray = ForceArrays(level);
-        ShapeNumber = GetShapeNumber(level);
-        MarkerStartPosition = DrawMarkerPosition();
+        PawnsTable = DrawPawns(difficulty, level);//draw arrangments of pawns in the start of level (based on difficulty and level)
+        ForceArray = ForceArrays(level);//chose force patern of map movement
+        ShapeNumber = GetShapeNumber(level);//chose drawn shape 
+        MarkerStartPosition = DrawMarkerPosition();//draw start position of map marker movement
     }
 
     //draw random order of number from 1 to 12

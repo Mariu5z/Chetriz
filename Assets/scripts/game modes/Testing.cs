@@ -1,13 +1,12 @@
 using System;
 using System.Collections;
-//using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
-//using static System.Net.Mime.MediaTypeNames;
 
+//Main program of the game
 public class Testing : MonoBehaviour
 {
-    //tworzenie zmiennych typu obiekty do których mo¿na siê potam odwo³ywaæ w inspektorze
+    //gameobject assigned in inspector so they can be changed throuh script
     public GameObject LvlWonText;
     public GameObject LvlLostText;
     public GameObject DrawObject;
@@ -25,73 +24,74 @@ public class Testing : MonoBehaviour
     public GameObject recordTimeText;
     public GameObject timeText;
 
-    //tworzenie obiektów stworzonych klas pomocnicznych
-    public Grid grid;//zawiera wartoœci tabeli wskazuj¹ce jak u³o¿one s¹ pionki, równie¿ rozmiary tabeli                     
-    public Circles circle;//zawiera graficzne kó³ka przedstawiaj¹ce pionki i steruje nimi
-    public Levels thisLevel;//zawiera dane dla ka¿dego poziomu, losuje siê w nim ustawienia na pocz¹tku poziomu i kszta³t
+    //auxiliary classes
+    public Grid grid;//manages matrix with values which defines pawns arrangment on board                    
+    public Circles circle;//manage sprites of circles which are portaing pawns on board
+    public Levels thisLevel;//defines data of every level of the game such as initial pawns position, current shape or force pattern on board
     
-    //tworzenie pomocniczych zmiennych, w tym flag
+    //auxiliary variables
     private int x, y, value1, value2;               
-    private bool first8 = true;//czy coœ ju¿ by³o postawione w trybie dodawania
-    private bool zatwierdz = false;//czy zatwierdzono
-    private bool zaznaczone = false;//czy ju¿ coœ w trybie dodawanie
-    private bool zaznaczone32 = false;//czy zaznaczono pierwszy pion w trybie zamienianie
-    private bool zaznaczone56 = false;
-    private Vector3 worldPositionNew;//zmienna do pozycji naciœniêcia
-    private int x8, y8, x32, y32, x56, y56;//zmienne do wspó³rzêdnych zaznaczonych
-    private bool zamien = false;//czy jesteœmy w trybie zamien
-    private bool dodaj = true;
+    private bool first8 = true;//flag, if was something already selected after confirmation or restart then false
+    private bool zatwierdz = false;//flag, if was already confirmed by confirm button then true
+    private bool zaznaczone = false;//if something was already selected in adding mode on then true
+    private bool zaznaczone32 = false;//if something was already selected in swapping mode on then true
+    private bool zaznaczone56 = false;//if 2 pawns were already selected in swapping mode on then true
+    private Vector3 worldPositionNew;//position in the board
+    private int x8, y8, x32, y32, x56, y56;//variables for coordinates of pawns on the board
+    private bool zamien = false;//if we are in swapping mode then true
+    private bool dodaj = true;//if we are in adding mode then true
 
-    public int count = 0;//licznik klikniec
-    private bool[] shapesFound = new bool[12];//tabela trafieñ kszta³tów dla gracza
-    private bool[] EnshapesFound = new bool[12];//tabela trafieñ kszta³tów dla przeciwnika
+    public int count = 0;//counter of clicks
+    private bool[] shapesFound = new bool[12];//table to store which shapes are arranged on board for player (from black-gray pawns)
+    private bool[] EnshapesFound = new bool[12];//table to store which shapes are arranged on board for enemy (from white-gray pawns)
 
-    public int Level;//zmienna mówi który level
-    public int Difficulty;//ilosc pionkow gracza, 1-³atwy, 2-œredni, 3-trudny
+    public int Level;
+    public int Difficulty;//number of black pawns on the board, deafult is 2
     public float timer;
-    public float wholeSeconds; 
+    public float wholeSeconds;//timer rounded to whole seconds
 
     void Start()
     {
-        Level = 1;//ustawienia pocz¹tkowe gry
+        //setting game for the first time
+        Level = 1;
         Difficulty = 2;
         timer = 0f;
         wholeSeconds = 0f;
 
-        Levels.DrawShapesOrder();//losuj kolejnoœæ kszta³tów w grze
+        Levels.DrawShapesOrder();//draw order of shapes in game
         thisLevel = new Levels(Difficulty, Level);
         grid = new Grid(7, 7, 8f);
         circle = new Circles(CirclesObject, grid.cellSize);
-        ShapePosition.SetShapes(ShapesObject, Levels.ShapesOrder);
-        Records.loadJSON();
-        SetLeveL();
+        Records.loadJSON();//load data of current records
+
+        SetLeveL();//standard function to prepare board for new level 
     }
 
     private void Update()
     {
 
-        if (Input.GetMouseButtonDown(0) && HowToPlay.boardLockFlag == false)                                                    //GDY LPM  jest nacisniety
+        if (Input.GetMouseButtonDown(0) && HowToPlay.boardLockFlag == false)//if LMB is pressed and interaction isn't turned off
         {
-            Vector3 mousePosition = Input.mousePosition;                      //pobierz pozycje myszy do lokalnej zmiennej
-                                                                              //pozycja myszy jest wstêpnie okreœlona wed³ug po³o¿enia na ekranie
-            worldPositionNew = Camera.main.ScreenToWorldPoint(mousePosition); //konwersja pozycji myszy na pozycje w œwiecie w unity
+            Vector3 mousePosition = Input.mousePosition;                      //get mouse position
+                                                                              //mouse position is definied by position in screen
+            worldPositionNew = Camera.main.ScreenToWorldPoint(mousePosition); //convert position on screen into position in unity,
+                                                                              //then it would be easy to convert it to position on board 
 
-            if (grid.GetValue(worldPositionNew) == 8 && dodaj)          //jesli klikna³eœ na puste pole i dodajesz pionka
+            if (grid.GetValue(worldPositionNew) == 8 && dodaj)          //if you clicked on empty field on the board and you are in adding mode
             {
-                if (!first8)                                            //wyczyœæ zaznaczenie ale nie dla pierwszego zaznaczenia ani zaraz po zatwierdzeniu 
+                if (!first8)//clean previoius selection (unless there was nothing selected earlier)                                            
                 {
                     circle.HideSelected(CirclesObject, false);
                 }
-                grid.GetXY(worldPositionNew, out x, out y);             //wspó³rzêdne zaznaczonego pola
-                x8 = x;                                                 //zapisz wspó³rzêdne        
+                grid.GetXY(worldPositionNew, out x, out y);      
+                x8 = x;                                                        
                 y8 = y;
-                circle.ShowSelected(CirclesObject, false, x8, y8);
-
-                first8 = false;                                          //juz nie pierwsze zaznaczenie
-                zaznaczone = true;                                      //zaznaczenie odnotowane
+                circle.ShowSelected(CirclesObject, false, x8, y8);//show selection circle in given coordinates
+                first8 = false;                                          
+                zaznaczone = true;                                      
             }
 
-            if (grid.GetValue(worldPositionNew) > 8 && zamien)             //jesli zaznaczono pionek
+            if (grid.GetValue(worldPositionNew) > 8 && zamien)             //if pawn is pressed and we are in swapping mode
             {
                 grid.GetXY(worldPositionNew, out x, out y);
                 if ( x == x32 && y == y32 )                                 
@@ -111,21 +111,21 @@ public class Testing : MonoBehaviour
                     }
                     zaznaczone32 = zaznaczone56;
                     zaznaczone56 = false;
-                }//jesli zaznaczony pionek byl juz zaznaczony to odznacz, drugi staje siê pierwszym
+                }//if pressed pawn has been already first selected pawn then unselect it, second turn into the first
                 else if (x == x56 && y == y56)                               
                 {
                     circle.HideSelected(CirclesObject, false);
                     x56 =0;
                     y56=0;
                     zaznaczone56 = false;
-                }//jesli zaznaczony pionek byl juz zaznaczony (ten drugi) to odznacz
+                }//if pressed pawn has been already second selected pawn then unselect it
                 else if (!zaznaczone32)                                         
                 {
                     x32 = x;
                     y32 = y;
                     circle.ShowSelected(CirclesObject, true, x32, y32);
                     zaznaczone32 = true;
-                }//jesli nie ma zanznaczonych pionków to zaznacz
+                }//if there are not selected pawns then select it 
                 else if((!zaznaczone56))                                        
                 {
                     x56 = x32;
@@ -135,7 +135,7 @@ public class Testing : MonoBehaviour
                     circle.ShowSelected(CirclesObject, false, x56, y56);
                     circle.ShowSelected(CirclesObject, true, x32, y32);
                     zaznaczone56 = true;
-                }//jesli tylko jeden pionek byl zaznaczony to juz bêd¹ dwa, pierwszy staje siê drugim
+                }//if only one pawn have been selected then select it as second, pressed one is first
                 else                                                           
                 {
                     x56 = x32;
@@ -144,26 +144,26 @@ public class Testing : MonoBehaviour
                     y32 = y;
                     circle.ShowSelected(CirclesObject, true, x32, y32);
                     circle.ShowSelected(CirclesObject, false, x56, y56);
-                }//jesli by³y ju¿ dwa zaznaczone inne pionki to odznacz drugiego, przesuñ pierwszego na drugie, zaznacz nowy
+                }//if there were two selected before, unselect second, first becomes second, pressed one is first
             }
 
         }
 
-        if (zatwierdz && zaznaczone)                                    //zatwierdzanie dodania pionka
+        if (zatwierdz && zaznaczone)                                    //confirm adding pawn
         {
             if (HowToPlay.step == 2) HowToPlay.taskDoneFlag = true;
             StartCoroutine(DelayedPawnMove1());
         }
 
-        if (zatwierdz && zaznaczone32 && zaznaczone56)                  //zatwierdzanie zamiany
+        if (zatwierdz && zaznaczone32 && zaznaczone56)                  //confirm swapping pawns
         {
             if (HowToPlay.step == 4) HowToPlay.taskDoneFlag = true;
             StartCoroutine(DelayedPawnMove2());   
         }
 
-        if (Buttons.RestartFlag || Buttons.RestartLeveLFlag)
+        if (Buttons.RestartFlag || Buttons.RestartLeveLFlag)    //restart game or restart only level
         {
-            if (Buttons.RestartFlag)
+            if (Buttons.RestartFlag)//restart game
             {
                 Level = 1;
                 count = -1;
@@ -179,24 +179,23 @@ public class Testing : MonoBehaviour
             Buttons.RestartLeveLFlag = false;
         }
 
-        if (Buttons.ChangeModeFlag)
+        if (Buttons.ChangeModeFlag)     //change mode of game (between adding and swapping)
         {
             if (HowToPlay.step == 3) HowToPlay.taskDoneFlag = true;
             Buttons.ChangeModeFlag = false;
             zmianatrybu();
         }
 
-        if (Buttons.ConfirmFlag)
+        if (Buttons.ConfirmFlag)    //button confirm actives this funtcion after pressing
         {
             Buttons.ConfirmFlag = false;
-
             if (zaznaczone || (zaznaczone32 && zaznaczone56))
             {
                 zatwierdz = true;
             }
         }
 
-        // Update the timer
+        // Update the timer, timer stops when both modes are turned off (betweeen levels)
         timer += Time.deltaTime;
         if (timer >= wholeSeconds + 1f && (dodaj || zamien))
         {
@@ -207,16 +206,22 @@ public class Testing : MonoBehaviour
 
     private void SetLeveL()
     {
+        circle.HideAllCircle(CirclesObject);
+        circle.HideSelected(CirclesObject, true);
+        circle.HideSelected(CirclesObject, false);
+
         grid.SetBoard(thisLevel.ForceArray, thisLevel.MarkerStartPosition);
         grid.AddPawns(thisLevel.PawnsTable);
         circle.AddPawns(thisLevel.PawnsTable, CirclesObject);
+        ShapePosition.SetShapes(ShapesObject, Levels.ShapesOrder);
         ShapePosition.GetCurrentShapes(ShapesObject, Levels.ShapesOrder, Level);
 
+        updateText(levelText, "Poziom: " + Level.ToString());
         changeScoreText(Level);
         timer = wholeSeconds;
         TrybDodaj();
 
-        Array.Fill(shapesFound, false);//czyszczenie tablicy
+        Array.Fill(shapesFound, false);
         Array.Fill(EnshapesFound, false);
 
         if(HowToPlay.tutorialFlag == false)
@@ -226,52 +231,33 @@ public class Testing : MonoBehaviour
             Buttons.activateButton(RestartButton);
             Buttons.deactivateButton(NextLevelButton);
         }
-        DrawObject.SetActive(false);
-    }
 
-    private void restartF()
-    {
+        DrawObject.SetActive(false);
         LvlWonText.SetActive(false);
         LvlLostText.SetActive(false);
         VictoryObject.SetActive(false);
+    }//standard function to prepare board for new level 
 
-        circle.HideAllCircle(CirclesObject);
-        circle.HideSelected(CirclesObject, true);
-        circle.HideSelected(CirclesObject, false);
-
-        ShapePosition.SetShapes(ShapesObject, Levels.ShapesOrder);
-
-        updateText(levelText, "Poziom: " + Level.ToString());
-        
+    private void restartF()
+    {
         thisLevel = new Levels(Difficulty, Level);
         SetLeveL();
-
         count++;
         updateText(counterText, "Licznik: " + count.ToString());
-    }
+    }//function restarting the level
 
     private void LoadNextLeveL()
     {
         Level++;
-        updateText(levelText, "Poziom: " + Level.ToString());
-
-        LvlWonText.SetActive(false);
-        LvlLostText.SetActive(false);
-        DrawObject.SetActive(false);
-
-        circle.HideAllCircle(CirclesObject);
-        circle.HideSelected(CirclesObject, true);
-        circle.HideSelected(CirclesObject, false);
-
         thisLevel = new Levels(Difficulty, Level);
         SetLeveL();
-    }
+    }//function loading next level
 
     private void CheckResults()
     {
-        if (shapesFound[thisLevel.ShapeNumber - 1] && !EnshapesFound[thisLevel.ShapeNumber - 1])
+        if (shapesFound[thisLevel.ShapeNumber - 1] && !EnshapesFound[thisLevel.ShapeNumber - 1])//if you won
         {
-            Records.updateRecords(Level, count, (int)wholeSeconds);//sprawdz i ewentualnie nadpisz rekord
+            Records.updateRecords(Level, count, (int)wholeSeconds);//check if the score could be saved in records
             if (Level == 12)
             {
                 VictoryObject.SetActive(true);
@@ -283,41 +269,39 @@ public class Testing : MonoBehaviour
             }
             Array.Fill(shapesFound, false);
             DrawObject.SetActive(false);
-            dodaj = false;                          //nieaktywne zaznaczanie
-            zamien = false;
-            Buttons.deactivateButton(ModeButton);
-            Buttons.deactivateButton(ConfirmButton);
-            Buttons.deactivateButton(RestartButton);
-        }//wygrales
-        else if (!shapesFound[thisLevel.ShapeNumber - 1] && EnshapesFound[thisLevel.ShapeNumber - 1])
-        {
-            LvlLostText.SetActive(true);
-            Array.Fill(EnshapesFound, false);
-            DrawObject.SetActive(false);
-            //Debug.Log("Przegrales");
             dodaj = false;
             zamien = false;
             Buttons.deactivateButton(ModeButton);
             Buttons.deactivateButton(ConfirmButton);
-        }//przegrales
-        else if (shapesFound[thisLevel.ShapeNumber - 1] && EnshapesFound[thisLevel.ShapeNumber - 1])
+            Buttons.deactivateButton(RestartButton);
+        }
+        else if (!shapesFound[thisLevel.ShapeNumber - 1] && EnshapesFound[thisLevel.ShapeNumber - 1])//if you lost
+        {
+            LvlLostText.SetActive(true);
+            Array.Fill(EnshapesFound, false);
+            DrawObject.SetActive(false);
+            dodaj = false;
+            zamien = false;
+            Buttons.deactivateButton(ModeButton);
+            Buttons.deactivateButton(ConfirmButton);
+        }
+        else if (shapesFound[thisLevel.ShapeNumber - 1] && EnshapesFound[thisLevel.ShapeNumber - 1])//if it is draw
         {
             DrawObject.SetActive(true);
             Array.Fill(shapesFound, false);
             Array.Fill(EnshapesFound, false);
-        }//remis
-        else
+        }
+        else //if nothing found
         {
             DrawObject.SetActive(false);
         }
-    }
+    }//function checks if you won, lost, or if is draw and do accordingly to it
 
-    private void zmianatrybu()                                           //obs³uga przycsku zmiany trybu gry po nacisnieciu
+    private void zmianatrybu()
     {
-        circle.HideSelected(CirclesObject, true);                                           //schowaj zaznaczenia
+        circle.HideSelected(CirclesObject, true);                       
         circle.HideSelected(CirclesObject, false);
-
-        if (dodaj)                                                      //jesli byl tryb dodawania
+        if (dodaj)                                                      //if there was adding mode
         {
             zamien = true;
             dodaj = false;
@@ -325,7 +309,7 @@ public class Testing : MonoBehaviour
             zaznaczone = false;
             first8 = true;
         }
-        else                                                            //jesli jest tryb zamiany
+        else                                                            //if there was swapping mode
         {
            zamien = false;                                         
            dodaj = true;
@@ -333,7 +317,7 @@ public class Testing : MonoBehaviour
            zaznaczone32 = false;
            zaznaczone56 = false;
         }
-    }
+    }//function swapping the modes in game (between adding and swapping)
 
     private void TrybDodaj()
     {
@@ -341,7 +325,7 @@ public class Testing : MonoBehaviour
         zamien = false;
         dodaj = true;
         first8 = true;
-    }
+    }//this function always turns on the adding mode
 
     private void changeScoreText(int level)
     {
@@ -366,13 +350,13 @@ public class Testing : MonoBehaviour
         {
             updateText(recordTimeText, "Rekord: " + best.ToString());
         }
-    }
+    }//update record texts in game to given level 
 
     private void updateText(GameObject gameObject, string newText)
     {
         Text textComponent = gameObject.GetComponent<Text>();
         textComponent.text = newText;
-    }
+    }//general function for changing text in given gameObject
 
     private IEnumerator DelayedPawnMove1()
     {
@@ -406,7 +390,7 @@ public class Testing : MonoBehaviour
         }
 
         yield break;
-    }
+    }//procedure after confirmation in adding mode, IEnumerator was solution for fluent animation
 
     private IEnumerator DelayedPawnMove2()
     {
@@ -468,6 +452,6 @@ public class Testing : MonoBehaviour
         }
 
         yield break;
-    }
+    }//procedure after confirmation in swapping mode, IEnumerator was solution for fluent animation
 
 }
