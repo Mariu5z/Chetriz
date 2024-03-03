@@ -522,7 +522,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "ZMIE\u0143 TRYB"
+  m_Text: CHANGE MODE
 --- !u!222 &74182311
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -770,7 +770,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Wyjd\u017A"
+  m_Text: Exit
 --- !u!222 &91635089
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -858,7 +858,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: UWAGA REMIS
+  m_Text: IT IS A DRAW
 --- !u!1 &120253255
 GameObject:
   m_ObjectHideFlags: 0
@@ -2081,7 +2081,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "PRZEJD\u0179 DALEJ"
+  m_Text: NEXT LEVEL
 --- !u!1 &280220375
 GameObject:
   m_ObjectHideFlags: 0
@@ -2917,7 +2917,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "ZATWIERD\u0179"
+  m_Text: CONFIRM
 --- !u!1 &394642661
 GameObject:
   m_ObjectHideFlags: 0
@@ -3205,7 +3205,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Czas: 0'
+  m_Text: 'Time: 0'
 --- !u!222 &413947788
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3637,7 +3637,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.8666667, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3654,10 +3654,10 @@ MonoBehaviour:
     m_Alignment: 1
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Czas
+  m_Text: Best times in seconds
 --- !u!222 &461604408
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4504,7 +4504,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Tryb: Dodawanie'
+  m_Text: 'Mode: Adding'
 --- !u!1 &638164445
 GameObject:
   m_ObjectHideFlags: 0
@@ -4576,7 +4576,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Rekord:'
+  m_Text: 'Record:'
 --- !u!222 &638164448
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4790,7 +4790,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Poziom: 1'
+  m_Text: 'Level: 1'
 --- !u!222 &644637974
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5122,7 +5122,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Graj
+  m_Text: Play
 --- !u!222 &676847257
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5913,7 +5913,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.8666667, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5930,10 +5930,10 @@ MonoBehaviour:
     m_Alignment: 1
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Klikni\u0119cia"
+  m_Text: Best clicks count
 --- !u!1 &761485294
 GameObject:
   m_ObjectHideFlags: 0
@@ -8956,7 +8956,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "WYJD\u0179"
+  m_Text: EXIT
 --- !u!222 &1283772811
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9893,7 +9893,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Rekordy
+  m_Text: Records
 --- !u!222 &1399340418
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10891,7 +10891,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Wyczy\u015B\u0107 rekordy"
+  m_Text: Clean all records
 --- !u!222 &1599306959
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -12225,7 +12225,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: DALEJ
+  m_Text: NEXT
 --- !u!222 &1781135802
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -13760,7 +13760,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Jak gra\u0107"
+  m_Text: How to play
 --- !u!222 &1991404012
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14016,7 +14016,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "POWT\xD3RZ"
+  m_Text: REPEAT
 --- !u!1 &2064984624
 GameObject:
   m_ObjectHideFlags: 0
@@ -14088,7 +14088,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Rekord:'
+  m_Text: 'Record:'
 --- !u!222 &2064984627
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14260,7 +14260,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Licznik: 0'
+  m_Text: 'Counter: 0'
 --- !u!1 &2108248407
 GameObject:
   m_ObjectHideFlags: 0

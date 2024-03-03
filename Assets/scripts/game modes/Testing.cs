@@ -169,7 +169,7 @@ public class Testing : MonoBehaviour
                 count = -1;
                 timer = 0f;
                 wholeSeconds = 0f;
-                updateText(timeText, "Czas: " + wholeSeconds.ToString());
+                updateText(timeText, "Time: " + wholeSeconds.ToString());
                 changeScoreText(Level);
                 Levels.DrawShapesOrder();
             }
@@ -200,7 +200,7 @@ public class Testing : MonoBehaviour
         if (timer >= wholeSeconds + 1f && (dodaj || zamien))
         {
             wholeSeconds = wholeSeconds + 1f;
-            updateText(timeText, "Czas: " + wholeSeconds.ToString());
+            updateText(timeText, "Time: " + wholeSeconds.ToString());
         }
     }
 
@@ -216,7 +216,7 @@ public class Testing : MonoBehaviour
         ShapePosition.SetShapes(ShapesObject, Levels.ShapesOrder);
         ShapePosition.GetCurrentShapes(ShapesObject, Levels.ShapesOrder, Level);
 
-        updateText(levelText, "Poziom: " + Level.ToString());
+        updateText(levelText, "Level: " + Level.ToString());
         changeScoreText(Level);
         timer = wholeSeconds;
         TrybDodaj();
@@ -243,7 +243,7 @@ public class Testing : MonoBehaviour
         thisLevel = new Levels(Difficulty, Level);
         SetLeveL();
         count++;
-        updateText(counterText, "Licznik: " + count.ToString());
+        updateText(counterText, "Counter: " + count.ToString());
     }//function restarting the level
 
     private void LoadNextLeveL()
@@ -305,7 +305,7 @@ public class Testing : MonoBehaviour
         {
             zamien = true;
             dodaj = false;
-            updateText(modeText, "Tryb: Zamienianie");                      
+            updateText(modeText, "Mode: Swapping");                      
             zaznaczone = false;
             first8 = true;
         }
@@ -313,7 +313,7 @@ public class Testing : MonoBehaviour
         {
            zamien = false;                                         
            dodaj = true;
-           updateText(modeText, "Tryb: Dodawanie");
+           updateText(modeText, "Mode: Adding");
            zaznaczone32 = false;
            zaznaczone56 = false;
         }
@@ -321,7 +321,7 @@ public class Testing : MonoBehaviour
 
     private void TrybDodaj()
     {
-        updateText(modeText, "Tryb: Dodawanie");
+        updateText(modeText, "Mode: Adding");
         zamien = false;
         dodaj = true;
         first8 = true;
@@ -333,22 +333,22 @@ public class Testing : MonoBehaviour
         int best = bestClicks[0];
         if (best >= Records.clicksLimit)
         {
-            updateText(recordText, "Rekord: -");
+            updateText(recordText, "Record: -");
         }
         else
         {
-            updateText(recordText, "Rekord: " + best.ToString());
+            updateText(recordText, "Record: " + best.ToString());
         }
 
         bestClicks = Records.getBestResults(level, "times");
         best = bestClicks[0];
         if (best >= Records.timesLimit)
         {
-            updateText(recordTimeText, "Rekord: -");
+            updateText(recordTimeText, "Record: -");
         }
         else
         {
-            updateText(recordTimeText, "Rekord: " + best.ToString());
+            updateText(recordTimeText, "Record: " + best.ToString());
         }
     }//update record texts in game to given level 
 
@@ -384,7 +384,7 @@ public class Testing : MonoBehaviour
                 shapesFound = Shapes.shapes(grid.gridArray55);
                 EnshapesFound = Shapes.EnShapes(grid.gridArray55);
                 count++;
-                updateText(counterText, "Licznik: " + count.ToString());
+                updateText(counterText, "Counter: " + count.ToString());
                 CheckResults();
             } 
         }
@@ -446,7 +446,7 @@ public class Testing : MonoBehaviour
                 shapesFound = Shapes.shapes(grid.gridArray55);
                 EnshapesFound = Shapes.EnShapes(grid.gridArray55);
                 count++;
-                updateText(counterText, "Licznik: " + count.ToString());
+                updateText(counterText, "Counter: " + count.ToString());
                 CheckResults();
             }
         }
