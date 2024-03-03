@@ -26,7 +26,7 @@ public class LevelData
 //class managing records database
 public static class Records
 {
-    static public string filePath = Application.persistentDataPath + "/RecordsData.json";//file for storing data
+    static public string filePath = Application.persistentDataPath + "/RecordsDataFile.json";//file for storing data
     static public RecordsData recordsData;//variable storing the all data
     static int numberOfLevels = 12;
     static int numberOfBestScores = 5;
@@ -36,6 +36,7 @@ public static class Records
     //loading records into recordsData variable so it will be accesible later
     static public void loadJSON()
     {
+        //Debug.Log(filePath);
         if (File.Exists(filePath))
         {
             //Debug.Log("file exists");
